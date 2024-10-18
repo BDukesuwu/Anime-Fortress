@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Anime Fortress</title>
+</head>
+<body>
+    <h1>Welcome to Anime Fortress!</h1>
+    
+    <% if (user) { %>
+        <!-- Show this content only for logged-in users -->
+        <p>Hello, <%= user.displayName %>! Welcome back to your anime watchlist!</p>
+        <a href="/logout">Logout</a> <!-- Log out button/link for logged-in users -->
+
+
+
+
+
+
+
+
+
+
+
+
+    <% } else { %>
+        <!-- Show this content for logged-out users -->
+        <p>Please <a href="/auth/google">login with Google</a> to fully acces the website.</p>
+    <% } %>
+</body>
+</html>
