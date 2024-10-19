@@ -102,7 +102,7 @@ app.use(function(err, req, res, next) {
 });
 
 // Start the server
-const PORT = process.env.PORT || 3000; // I define the port from .env, or default to 3000
+const PORT = process.env.PORT || 3001; // I define the port from .env, or default to 3000
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`); // I log a message that the server is running
 });
