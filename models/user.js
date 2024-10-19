@@ -9,7 +9,7 @@ const userSchema = new Schema({
 }, { 
   timestamps: true // I enable automatic createdAt and updatedAt fields.
   
-  //I want to store anime.id and anime watch status in user data
+  //Watchlist functions: I want to store anime.id and anime watch status in user data
 });
 
 module.exports = mongoose.model('User', userSchema); // I export the User model based on the schema.
