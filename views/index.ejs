@@ -13,7 +13,7 @@
         <p>Hello, <%= user.displayName %>! Welcome back to your anime watchlist!</p>
         <a href="/logout">Logout</a> <!-- Log out button/link for logged-in users -->
 
-        <h2>Anime List</h2> <!-- Changed h1 to h2 for better structure -->
+        <h2>Anime List</h2>
         <ul>
             <% if (animeList && animeList.length > 0) { %> <!-- Check if animeList is available -->
                 <% animeList.forEach(anime => { %> <!-- Loop through each anime in the list -->
