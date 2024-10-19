@@ -19,7 +19,7 @@
                 <% animeList.forEach(anime => { %> <!-- Loop through each anime in the list -->
                     <li>
                         <a href="/anime/<%= anime.id %>"> <!-- Link to the details page -->
-                            <img src="<%= anime.image_url %>" alt="<%= anime.title %>"> <!-- Display the anime image -->
+                            <img src="<%= anime.image %>" alt="<%= anime.title %>"> <!-- Display the anime image -->
                             <h3><%= anime.title %></h3> <!-- Display the anime title -->
                         </a>
                     </li>
@@ -31,7 +31,7 @@
         
 
 
-        
+
     <% } else { %>
         <!-- Show this content for logged-out users -->
         <p>Please <a href="/auth/google">login with Google</a> to fully access the website.</p>
