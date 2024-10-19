@@ -14,6 +14,8 @@ const createError = require('http-errors'); // I use this for creating HTTP erro
 
 // Import routes from the Routes folder
 const indexRouter = require('./routes/index'); // I import the index router to handle homepage routes
+const animeRouter = require('./routes/anime'); // Import the anime router for anime-related routes
+
 
 // Create the Express app
 const app = express(); // I create my Express application here
@@ -67,6 +69,8 @@ app.use(express.static(path.join(__dirname, 'public'))); // I serve static files
 
 // Use routes defined in the index router (for homepage)
 app.use('/', indexRouter); // I tell Express to use the index router for homepage routes
+app.use('/', animeRouter); // I tell Express to use the anime router for anime-related routes
+
 
 // Define the Google authentication routes
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] })); // I start Google OAuth login process

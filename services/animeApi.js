@@ -1,42 +1,45 @@
-const axios = require('axios'); // I import axios to make HTTP requests
+const https = require('https'); // Use the built-in https module
 
 const API_KEY = process.env.RAPIDAPI_KEY; // I store my API key securely in the .env file
-const BASE_URL = 'https://myanimelist.p.rapidapi.com'; // I define the base URL for the API
+const BASE_URL = 'anime-db.p.rapidapi.com'; // The base URL for the Anime DB API
 
 // Function to fetch a list of anime from the API
-async function fetchAnimeList(page = 1, limit = 10) { // I set default values for pagination: page 1, 10 items
-  try {
-    const response = await axios.get(`${BASE_URL}/anime`, { // I make a GET request to the anime endpoint
+async function fetchAnimeList(page = 1, size = 10, search = '') { // I set default values for pagination
+  return new Promise((resolve, reject) => {
+    const options = {
+      method: 'GET',
+      hostname: BASE_URL,
+      path: `/anime?page=${page}&size=${size}&search=${encodeURIComponent(search)}`, // Build the path with query parameters
       headers: {
-        'X-RapidAPI-Key': API_KEY, // I use my RapidAPI key from .env
-        'X-RapidAPI-Host': 'myanimelist.p.rapidapi.com' // I specify the API host for this request
-      },
-      params: {
-        page,    // I send the page number for pagination
-        limit    // I limit the number of items per page
+        'x-rapidapi-key': API_KEY, // I use my RapidAPI key from .env
+        'x-rapidapi-host': 'anime-db.p.rapidapi.com' // I specify the API host for this request
       }
+    };
+
+    const req = https.request(options, function (res) {
+      const chunks = [];
+
+      res.on('data', function (chunk) {
+        chunks.push(chunk); // Collect data chunks
+      });
+
+      res.on('end', function () {
+        const body = Buffer.concat(chunks); // Combine the data chunks
+        resolve(JSON.parse(body.toString())); // Parse and resolve the data as JSON
+      });
     });
-    return response.data; // I return the anime list data from the response
-  } catch (error) {
-    console.error('Error fetching anime list:', error); // I log any errors that occur during the request
-    throw error; // I throw the error to handle it elsewhere
-  }
+
+    req.on('error', function (error) {
+      reject(error); // Handle errors
+    });
+
+    req.end(); // End the request
+  });
 }
 
-// Function to fetch details of a specific anime
-async function fetchAnimeDetails(id) { // I use the anime ID to get specific anime details
-  try {
-    const response = await axios.get(`${BASE_URL}/anime/${id}`, { // I make a GET request to the specific anime endpoint
-      headers: {
-        'X-RapidAPI-Key': API_KEY, // I use my RapidAPI key from .env
-        'X-RapidAPI-Host': 'myanimelist.p.rapidapi.com' // I specify the API host for this request
-      }
-    });
-    return response.data; // I return the anime details data from the response
-  } catch (error) {
-    console.error('Error fetching anime details:', error); // I log any errors that occur during the request
-    throw error; // I throw the error to handle it elsewhere
-  }
+// Function to fetch details of a specific anime (optional)
+async function fetchAnimeDetails(id) {
+  // Implementation for fetching details if needed
 }
 
 module.exports = {
