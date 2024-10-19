@@ -25,8 +25,9 @@ async function fetchAnimeList(page = 1, size = 10, search = '') { // I set defau
 
       res.on('end', function () {
         const body = Buffer.concat(chunks); // Combine the data chunks
-        resolve(JSON.parse(body.toString())); // Parse and resolve the data as JSON
-      });
+        const responseData = JSON.parse(body.toString());
+        resolve(responseData.data); // Resolve the promise with the 'data' array
+       });
     });
 
     req.on('error', function (error) {

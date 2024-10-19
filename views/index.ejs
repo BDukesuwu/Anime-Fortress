@@ -13,9 +13,9 @@
         <p>Hello, <%= user.displayName %>! Welcome back to your anime watchlist!</p>
         <a href="/logout">Logout</a> <!-- Log out button/link for logged-in users -->
 
-        <h2>Anime List</h2>
+        <h2>Anime List</h2> <!-- Section heading for the anime list -->
         <ul>
-            <% if (animeList && animeList.length > 0) { %> <!-- Check if animeList is available -->
+            <% if (animeList && animeList.length > 0) { %> <!-- Check if animeList is available and has items -->
                 <% animeList.forEach(anime => { %> <!-- Loop through each anime in the list -->
                     <li>
                         <a href="/anime/<%= anime.id %>"> <!-- Link to the details page -->
@@ -26,13 +26,12 @@
                 <% }); %> <!-- Close the forEach loop -->
             <% } else { %>
                 <p>No anime found.</p> <!-- Message if no anime are available -->
-            <% } %>
+            <% } %> <!-- Close the if check for animeList -->
         </ul>
         
 
 
-
-
+        
     <% } else { %>
         <!-- Show this content for logged-out users -->
         <p>Please <a href="/auth/google">login with Google</a> to fully access the website.</p>
