@@ -15,7 +15,7 @@ const createError = require('http-errors'); // I use this for creating HTTP erro
 // Import routes from the Routes folder
 const indexRouter = require('./routes/index'); // I import the index router to handle homepage routes
 const animeRouter = require('./routes/anime'); // Import the anime router for anime-related routes
-
+//set up route to anime details page
 
 // Create the Express app
 const app = express(); // I create my Express application here

@@ -18,20 +18,85 @@
         <ul id="animeList">
             <% if (animeList && animeList.length > 0) { %> <!-- Check if animeList is available and has items -->
                 <% animeList.forEach(anime => { %> <!-- Loop through each anime in the list -->
-                    <li class="anime-item"></li>>
+                    <li class="anime-item">
                         <a href="/anime/<%= anime.id %>"> <!-- Link to the details page -->
-                            <img src="<%= anime.image %>" alt="<%= anime.title %>"> <!-- Display the anime image -->
+                            <img src="<%= anime.image %>"> <!-- Display the anime image -->
                             <h3><%= anime.title %></h3> <!-- Display the anime title -->
                         </a>
                     </li>
                 <% }); %> <!-- Close the forEach loop -->
             <% } else { %>
                 <p>No anime found.</p> <!-- Message if no anime are available -->
-            <% } %> <!-- Close the if check for animeList -->
+            <% } %>
         </ul>
     </div>
         
 
+<!-- Pagination buttons -->
+<div class="pagination">
+    <button id="prevPage" disabled>Previous</button> <!-- I disabled this at first because I'm on page 1 -->
+    <button id="nextPage">Next</button> <!-- This button lets me go to the next page -->
+</div>
+
+<!-- JavaScript for handling pagination -->
+<script>
+    let currentPage = 1; // I start on page 1
+
+    // This function gets anime data for the given page and updates my list
+    async function fetchAnime(page) {
+        try {
+            const response = await fetch(`/api/anime?page=${page}`); // I request anime data from my backend API
+            if (!response.ok) throw new Error("Failed to fetch anime data."); // If the request fails, I throw an error
+
+            const data = await response.json(); // I turn the response into a JSON object
+
+            const animeList = document.getElementById('animeList'); // I grab the anime list container from my HTML
+            animeList.innerHTML = ''; // I clear out the current list so I can add the new one
+
+            if (data.length > 0) {
+                // If I got anime data, I loop through each item
+                data.forEach(anime => {
+                    const listItem = document.createElement('li'); // I make a new list item
+                    listItem.className = 'anime-item'; // I give it a class for styling
+
+                    // I add the anime's image and title inside the list item
+                    listItem.innerHTML = `
+                        <a href="/anime/${anime.id}">
+                            <img src="${anime.image}" alt="${anime.title}"> <!-- Anime image -->
+                            <h3>${anime.title}</h3> <!-- Anime title -->
+                        </a>`;
+                    animeList.appendChild(listItem); // I add this list item to the anime list in the HTML
+                });
+            } else {
+                // If there’s no anime data, I show a message instead
+                animeList.innerHTML = '<p>No anime found.</p>';
+            }
+
+            // I disable the "Previous" button if I’m on the first page
+            document.getElementById('prevPage').disabled = page === 1;
+        } catch (error) {
+            // If something goes wrong, I log the error in the console
+            console.error(error);
+        }
+    }
+
+    // When I click the "Previous" button, I fetch the previous page
+    document.getElementById('prevPage').addEventListener('click', () => {
+        if (currentPage > 1) { // I only go back if I’m not on the first page
+            currentPage--; // I decrease the current page number
+            fetchAnime(currentPage); // I get data for the new page
+        }
+    });
+
+    // When I click the "Next" button, I fetch the next page
+    document.getElementById('nextPage').addEventListener('click', () => {
+        currentPage++; // I increase the current page number
+        fetchAnime(currentPage); // I get data for the new page
+    });
+
+    // When the page loads, I fetch data for the first page
+    fetchAnime(currentPage);
+</script>
 
 
     <% } else { %>

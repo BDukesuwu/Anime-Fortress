@@ -1,13 +1,13 @@
 const https = require('https'); // Use the built-in https module
 
 const API_KEY = process.env.RAPIDAPI_KEY; // I store my API key securely in the .env file
-const BASE_URL = 'anime-db.p.rapidapi.com'; // The base URL for the Anime DB API
+const BASE_URL = process.env.MYBASE_URL; // The base URL for the Anime DB API
 
 // Variable to track the current page of anime (starts at 1)
 let currentPage = 1;
 
 // Function to fetch the anime list from the API
-const fetchAnimeList = async (page = 1, size = 10, search = '') => {
+const fetchAnimeList = async (page = 1, size = 10, ) => { //search = '' TEST THIS OUT!!!!!!!!!!!!!!!!!!!!!
   // I use a Promise to handle asynchronous operations easily
   return new Promise((resolve, reject) => {
     const options = {
@@ -16,7 +16,7 @@ const fetchAnimeList = async (page = 1, size = 10, search = '') => {
       path: `/anime?page=${page}&size=${size}&search=${encodeURIComponent(search)}`, // I pass the page, size, and search term as query parameters
       headers: {
         'x-rapidapi-key': API_KEY, // My API key from .env for authentication
-        'x-rapidapi-host': 'anime-db.p.rapidapi.com' // The API's host name
+        'x-rapidapi-host': BASE_URL // The API's host name
       }
     };
 
@@ -44,7 +44,7 @@ const fetchAnimeList = async (page = 1, size = 10, search = '') => {
 };
 
 // Function to show the next page of anime
-const showNextPage = async (size = 10, search = '') => {
+const showNextPage = async (size = 10, ) => { //search = '' TEST THIS OUT!!!!!!!!!!!!!!!!!!!!!
   currentPage++; // I move to the next page
   console.log(`Loading page ${currentPage}...`); // I log the current page for debugging
   const animeList = await fetchAnimeList(currentPage, size, search); // I fetch the new page
