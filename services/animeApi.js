@@ -3,47 +3,75 @@ const https = require('https'); // Use the built-in https module
 const API_KEY = process.env.RAPIDAPI_KEY; // I store my API key securely in the .env file
 const BASE_URL = 'anime-db.p.rapidapi.com'; // The base URL for the Anime DB API
 
-// Function to fetch a list of anime from the API
-async function fetchAnimeList(page = 1, size = 10, search = '') { // I set default values for pagination
+// Variable to track the current page of anime (starts at 1)
+let currentPage = 1;
+
+// Function to fetch the anime list from the API
+const fetchAnimeList = async (page = 1, size = 10, search = '') => {
+  // I use a Promise to handle asynchronous operations easily
   return new Promise((resolve, reject) => {
     const options = {
-      method: 'GET',
-      hostname: BASE_URL,
-      path: `/anime?page=${page}&size=${size}&search=${encodeURIComponent(search)}`, // Build the path with query parameters
+      method: 'GET', // I use the GET request method to retrieve data
+      hostname: BASE_URL, // This is the base URL of the API
+      path: `/anime?page=${page}&size=${size}&search=${encodeURIComponent(search)}`, // I pass the page, size, and search term as query parameters
       headers: {
-        'x-rapidapi-key': API_KEY, // I use my RapidAPI key from .env
-        'x-rapidapi-host': 'anime-db.p.rapidapi.com' // I specify the API host for this request
+        'x-rapidapi-key': API_KEY, // My API key from .env for authentication
+        'x-rapidapi-host': 'anime-db.p.rapidapi.com' // The API's host name
       }
     };
 
+    // I create the request to the API
     const req = https.request(options, function (res) {
-      const chunks = [];
+      const chunks = []; // This array stores the data chunks I receive
 
       res.on('data', function (chunk) {
-        chunks.push(chunk); // Collect data chunks
+        chunks.push(chunk); // I collect each data chunk
       });
 
       res.on('end', function () {
-        const body = Buffer.concat(chunks); // Combine the data chunks
-        const responseData = JSON.parse(body.toString());
-        resolve(responseData.data); // Resolve the promise with the 'data' array
-       });
+        const body = Buffer.concat(chunks); // I combine all chunks into a single buffer
+        const responseData = JSON.parse(body.toString()); // Convert the buffer into a JSON object
+        resolve(responseData.data); // I resolve the promise with the 'data' array
+      });
     });
 
     req.on('error', function (error) {
-      reject(error); // Handle errors
+      reject(error); // I handle errors by rejecting the promise
     });
 
-    req.end(); // End the request
+    req.end(); // I end the request after setting it up
   });
-}
+};
 
-// Function to fetch details of a specific anime (optional)
+// Function to show the next page of anime
+const showNextPage = async (size = 10, search = '') => {
+  currentPage++; // I move to the next page
+  console.log(`Loading page ${currentPage}...`); // I log the current page for debugging
+  const animeList = await fetchAnimeList(currentPage, size, search); // I fetch the new page
+  console.log(animeList); // I display the anime list in the console
+};
+
+// Function to show the previous page of anime
+const showPreviousPage = async (size = 10, search = '') => {
+  if (currentPage > 1) { // I only go back if I'm not on the first page
+    currentPage--; // I move to the previous page
+    console.log(`Loading page ${currentPage}...`); // I log the current page for debugging
+    const animeList = await fetchAnimeList(currentPage, size, search); // I fetch the new page
+    console.log(animeList); // I display the anime list in the console
+  } else {
+    console.log('You are already on the first page!'); // I handle the case where there are no previous pages
+  }
+};
+
+// Function to fetch details of a specific anime (optional for now)
 async function fetchAnimeDetails(id) {
   // Implementation for fetching details if needed
 }
 
+// I export the functions to use them in other parts of the application
 module.exports = {
-  fetchAnimeList,      // I export the fetchAnimeList function to use in other files
-  fetchAnimeDetails    // I export the fetchAnimeDetails function to use in other files
+  fetchAnimeList,      // This function fetches a paginated list of anime
+  showNextPage,        // This function moves to the next page of anime
+  showPreviousPage,    // This function moves to the previous page of anime
+  fetchAnimeDetails    // This function fetches details of a specific anime
 };

@@ -14,10 +14,11 @@
         <a href="/logout">Logout</a> <!-- Log out button/link for logged-in users -->
 
         <h2>Anime List</h2> <!-- Section heading for the anime list -->
-        <ul>
+        <div id="animeListContainer">
+        <ul id="animeList">
             <% if (animeList && animeList.length > 0) { %> <!-- Check if animeList is available and has items -->
                 <% animeList.forEach(anime => { %> <!-- Loop through each anime in the list -->
-                    <li>
+                    <li class="anime-item"></li>>
                         <a href="/anime/<%= anime.id %>"> <!-- Link to the details page -->
                             <img src="<%= anime.image %>" alt="<%= anime.title %>"> <!-- Display the anime image -->
                             <h3><%= anime.title %></h3> <!-- Display the anime title -->
@@ -28,6 +29,7 @@
                 <p>No anime found.</p> <!-- Message if no anime are available -->
             <% } %> <!-- Close the if check for animeList -->
         </ul>
+    </div>
         
 
 
